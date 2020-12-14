@@ -23,12 +23,16 @@ import (
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	db, err := bolt.Open("my.db", 0600, nil)
-	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer db.Close()
 
 	u, err := url.Parse(r.URL.String())
-	log.Fatal(err)
-	m,err := url.ParseQuery(u.RawQuery)
+	if err != nil{
+		log.Fatal(err)
+	}
+	m, _ := url.ParseQuery(u.RawQuery)
 	fmt.Println(m)
 
 	var user User
