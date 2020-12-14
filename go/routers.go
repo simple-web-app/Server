@@ -52,49 +52,49 @@ var routes = Routes{
 	Route{
 		"Index",
 		"GET",
-		"/serviece/Test/1.0.0/",
+		"/blog/",
 		Index,
 	},
 
 	Route{
 		"DeleteArticleById",
 		strings.ToUpper("Get"),
-		"/serviece/Test/1.0.0/user/deleteArticle/{id}",
+		"/blog/user/deleteArticle/{id}",
 		DeleteArticleById,
 	},
 
 	Route{
 		"GetArticleById",
 		strings.ToUpper("Get"),
-		"/serviece/Test/1.0.0/user/article/{id}",
+		"/blog/user/article/{id}",
 		GetArticleById,
 	},
 
 	Route{
 		"GetArticles",
 		strings.ToUpper("Get"),
-		"/serviece/Test/1.0.0/user/articles",
+		"/blog/user/articles",
 		GetArticles,
 	},
 
 	Route{
 		"GetCommentsOfArticle",
 		strings.ToUpper("Get"),
-		"/serviece/Test/1.0.0/user/article/{id}/comments",
+		"/blog/user/article/{id}/comments",
 		GetCommentsOfArticle,
 	},
 
 	Route{
 		"CreateComment",
 		strings.ToUpper("Post"),
-		"/serviece/Test/1.0.0/user/article/{id}/comments",
+		"/blog/user/article/{id}/comments",
 		CreateComment,
 	},
 
 	Route{
 		"SignIn",
 		strings.ToUpper("Get"),
-		"/serviece/Test/1.0.0/user/signin",
+		"/blog/user/signin",
 		SignIn,
 	},
 }
