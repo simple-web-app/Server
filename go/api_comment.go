@@ -11,10 +11,110 @@
 package swagger
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/url"
+	"sort"
+	"strconv"
+	"github.com/boltdb/bolt"
+	"log"
 	"net/http"
+	"strings"
 )
+type UserSlice []Comment
 
+func (s UserSlice) Len() int {
+	return len(s)
+}
+func (s UserSlice) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s UserSlice) Less(i, j int) bool {
+	return s[i].Date > s[j].Date
+}
 func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil{
+		log.Fatal(err)
+	}
+	defer db.Close()
+	articleId := strings.Split(r.URL.Path, "/")[4]
+	temp, err := strconv.Atoi(articleId)
+	var Id int = int(temp)
+	if err != nil{
+		response := Response400{err.Error()}
+		JsonResponse(response, w, http.StatusBadRequest)
+		return
+	}
+	u, err := url.Parse(r.URL.String())
+	if err != nil{
+		log.Fatal(err)
+	}
+	m, _ := url.ParseQuery(u.RawQuery)
+	page := m["page"][0]
+	index, err := strconv.Atoi(page)
+	fmt.Println(index)
+	var article []byte
+	err = db.View(func(tx *bolt.Tx) error{
+		b := tx.Bucket([]byte("Article"))
+		if b != nil{
+			v := b.Get(itob(Id))
+			if v == nil{
+				return errors.New("Article Not Exists")
+			} else{
+				article = v
+				return nil
+			}
+		} else{
+			return errors.New("Article Not Exists")
+		}
+	})
+	if err != nil{
+		response := Response404{err.Error()}
+		JsonResponse(response, w, http.StatusNotFound)
+		return
+	}
+	var comments Comments
+	var comment Comment
+	err = db.View(func(tx *bolt.Tx) error{
+		b := tx.Bucket([]byte("Comment"))
+		if b != nil{
+			c := b.Cursor()
+			for k, v := c.First(); k != nil; k, v = c.Next(){
+				err = json.Unmarshal(v, &comment)
+				if err != nil{
+					return err
+				}
+				if int(comment.ArticleId) == Id{
+					comments.Contents = append(comments.Contents, comment)
+				}
+			}
+			return nil
+		}else {
+			return errors.New("Comment Not Exists")
+		}
+	})
+	if err != nil{
+		response := Response404{err.Error()}
+		JsonResponse(response, w, http.StatusNotFound)
+		return
+	}
+	contentsCount := len(comments.Contents)
+	comments.PageCount = contentsCount
+	sort.Sort(UserSlice(comments.Contents))
+	if contentsCount <= (index - 1) * 5{
+		err := errors.New("Page is out of index")
+		response := ErrorResponse{err.Error()}
+		JsonResponse(response, w, http.StatusNotFound)
+		return
+	}
+	var end int
+	if index * 5 < contentsCount{
+		end = index * 5
+	}else {
+		end = contentsCount
+	}
+	comments.Contents = comments.Contents[(index - 1) * 5 : end]
+	JsonResponse(comments, w, http.StatusOK)
 }

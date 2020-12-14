@@ -11,10 +11,106 @@
 package swagger
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"github.com/boltdb/bolt"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
+	"log"
 	"net/http"
+	"strconv"
+	"strings"
+	"time"
 )
 
 func CreateComment(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	fmt.Println("CreateComment")
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil{
+		log.Fatal(err)
+	}
+	defer db.Close()
+	articleId := strings.Split(r.URL.Path, "/")[4]
+	fmt.Println("ArticleId is:", articleId)
+	Id, err := strconv.Atoi(articleId)
+	if err != nil{
+		fmt.Println("Get Id failed")
+		response := Response404{err.Error()}
+		JsonResponse(response, w, http.StatusBadRequest)
+		return
+	}
+	var article Article
+	err = db.View(func(tx *bolt.Tx) error{
+		b := tx.Bucket([]byte("Article"))
+		if b != nil{
+			v := b.Get(itob(Id))
+			if v == nil{
+				return errors.New("Article Not Exists")
+			} else{
+				_ = json.Unmarshal(v, &article)
+				return nil
+			}
+		}
+		return errors.New("Article Not Exists")
+	})
+	if err != nil{
+		fmt.Println("Article Not Exists")
+		response := Response404{err.Error()}
+		JsonResponse(response, w, http.StatusBadRequest)
+		return
+	}
+	fmt.Println("article id:", article.Id)
+	comment := Comment{
+		Date: time.Now().Format("2006-01-02 15:04:05"),
+		Content: "",
+		Author: "",
+		ArticleId: int32(Id),
+	}
+	err = json.NewDecoder(r.Body).Decode(&comment)
+	if err != nil || comment.Content == ""{
+		w.WriteHeader(http.StatusBadRequest)
+		if err != nil{
+			response := Response404{err.Error()}
+			JsonResponse(response, w, http.StatusBadRequest)
+		} else{
+			response := ErrorResponse{"There is no content"}
+			JsonResponse(response, w, http.StatusBadRequest)
+		}
+		return
+	} else{
+		fmt.Println("comment:",comment)
+	}
+	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor, func(token *jwt.Token)(interface{}, error){
+		fmt.Println(token)
+		return []byte(comment.Author), nil
+	})
+	fmt.Println(token)
+	if err == nil{
+		if token.Valid{
+			err = db.Update(func(tx *bolt.Tx) error{
+				b, err := tx.CreateBucketIfNotExists([]byte("Comment"))
+				if err != nil{
+					return err
+				}
+				id, _ := b.NextSequence()
+				encoded, err := json.Marshal(comment)
+				var str string
+				str = strconv.Itoa(Id) + "_" + strconv.Itoa(int(id))
+				return b.Put([]byte(str), encoded)
+			})
+			if err != nil{
+				response := Response404{err.Error()}
+				JsonResponse(response, w, http.StatusBadRequest)
+				return
+			}
+			JsonResponse(comment, w, http.StatusOK)
+		} else{
+			response := ErrorResponse{"Token is not valid"}
+			JsonResponse(response, w, http.StatusUnauthorized)
+		}
+	} else{
+		response := ErrorResponse{"Unauthorized access to this resource"}
+		JsonResponse(response, w, http.StatusUnauthorized)
+	}
 }
