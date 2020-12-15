@@ -160,3 +160,8 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(string(json))
 	JsonResponse(articles, w, http.StatusOK)
 }
+
+
+func AddArticleByID(w http.ResponseWriter, r *http.Request) {
+
+}
