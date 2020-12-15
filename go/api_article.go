@@ -162,6 +162,6 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func AddArticleByID(w http.ResponseWriter, r *http.Request) {
+func AddArticle(w http.ResponseWriter, r *http.Request) {
 
 }

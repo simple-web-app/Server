@@ -100,7 +100,30 @@ paths:
           schema:
             $ref: "#/definitions/response_404"
 
-
+  /user/addArticle:
+    post:
+      tags:
+        - "article"
+      summary: "Add a article at last"
+      description: "Add a article"
+      operationId: "AddArticle"
+      parameters:
+        - in: "Article"
+          name: "Article"
+          required: true
+          schema:
+            $ref: "#/definitions/Article"
+          x-exportParaName: "Article"
+          x-exportParamName: "Article"
+      responses:
+        "200":
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Article"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/response_400"
 
   /user/deleteArticle/{id}:
     get:
