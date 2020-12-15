@@ -147,8 +147,8 @@ func CreateTable() {
 		if b != nil {
 			var article Article
 			var tags []Tag
-			tags = append(tags, Tag{"CS"})
-			tags = append(tags, Tag{"SC"})
+			tags = append(tags, Tag{"tag1"})
+			tags = append(tags, Tag{"tag2"})
 
 			filePath := "./data"
 			files, err := ioutil.ReadDir(filePath)
@@ -176,7 +176,7 @@ func CreateTable() {
 				//fmt.Println("文本内容为:", string(content))
 
 				title := articleName[:len(articleName)-3]
-				article = Article{int32(i), title, tags, "2019", string(content)}
+				article = Article{int32(i), title, tags, "2020", string(content)}
 				v, err := json.Marshal(article)
 				//insert rows
 				err = b.Put(itob(i), v)

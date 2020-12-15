@@ -81,10 +81,11 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	} else{
 		fmt.Println("comment:",comment)
 	}
-	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor, func(token *jwt.Token)(interface{}, error){
-		fmt.Println(token)
-		return []byte(comment.Author), nil
-	})
+	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
+		func(token *jwt.Token)(interface{}, error) {
+			fmt.Println("1")
+			return []byte(comment.Author), nil
+		})
 	fmt.Println(token)
 	if err == nil{
 		if token.Valid{
