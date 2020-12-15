@@ -201,7 +201,7 @@ func Articles() {
 	getArticles(1)
 
 	deleteArticleById(1)
-	getArticleById(1)
+	//getArticleById(1)
 
 }
 
