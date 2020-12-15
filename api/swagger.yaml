@@ -99,6 +99,9 @@ paths:
           description: "Not Found"
           schema:
             $ref: "#/definitions/response_404"
+
+
+
   /user/deleteArticle/{id}:
     get:
       tags:

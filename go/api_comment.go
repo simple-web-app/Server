@@ -56,6 +56,7 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 	index, err := strconv.Atoi(page)
 	fmt.Println(index)
 	var article []byte
+	fmt.Println(article)
 	err = db.View(func(tx *bolt.Tx) error{
 		b := tx.Bucket([]byte("Article"))
 		if b != nil{

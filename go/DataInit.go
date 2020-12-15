@@ -95,6 +95,7 @@ func CreateComments() {
 		log.Fatal(err)
 	}
 }
+
 func CreateUser() {
 	db, err := bolt.Open("my.db", 0600, nil)
 	if err != nil {
@@ -128,6 +129,7 @@ func CreateUser() {
 		log.Fatal(err)
 	}
 }
+
 func CreateTable() {
 	db, err := bolt.Open("my.db", 0600, nil)
 	if err != nil {
