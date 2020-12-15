@@ -84,9 +84,11 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
 		func(token *jwt.Token)(interface{}, error) {
 			fmt.Println("1")
-			return []byte(comment.Author), nil
+			return []byte("my_secret_key"), nil
 		})
-	fmt.Println(token)
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		comment.Author = claims["username"].(string)
+	}
 	if err == nil{
 		if token.Valid{
 			err = db.Update(func(tx *bolt.Tx) error{

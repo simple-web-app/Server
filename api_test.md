@@ -173,7 +173,7 @@ Authorization : token（token为登录时返回的token）
 
 需要Body
 
-{"content":"contents","author":"user1"} 两个属性均为string
+{"content":"contents"} 属性为string
 
 返回值
 

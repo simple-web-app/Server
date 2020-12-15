@@ -14,10 +14,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/boltdb/bolt"
+	"github.com/dgrijalva/jwt-go"
 	"log"
 	"net/http"
 	"net/url"
-	"github.com/dgrijalva/jwt-go"
 	"time"
 )
 
@@ -62,6 +62,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
+	claims["username"] = user.Username
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
 	claims["iat"] = time.Now().Unix()
 	token.Claims = claims
@@ -70,7 +71,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	tokenString, err := token.SignedString([]byte(user.Username))
+	tokenString, err := token.SignedString([]byte("my_secret_key"))
 	if err != nil {
 		log.Fatal(err)
 	}
