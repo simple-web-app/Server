@@ -117,6 +117,50 @@ http://localhost:8080/blog/user/deleteArticle/1
 "Success"
 ```
 
+#### Add Article
+
+```
+http://localhost:8080/blog/user/addArticle
+```
+
+需要Body内容，格式如下：
+![](./fig/addArticle.PNG)
+
+举例：
+```
+{
+"name":"new article",
+"tags":[{"name":"test"}],
+"content":"user add article test"
+}
+```
+
+结果：
+```
+{
+  "id": 6,
+  "name": "new article",
+  "tags": [
+    {
+      "name": "test"
+    }
+  ],
+  "date": "2020-12-16 22:27:15",
+  "content": "user add article test"
+}
+```
+
+然后查看articles可以看到：
+
+```
+{
+ http://localhost:8080/blog/user/articles?page=1
+```
+![](./fig/articles.PNG)
+
+显然，这时已经成功添加文件了。
+
+
 #### 	Get Comments
 
 ```
