@@ -31,6 +31,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
 	articleId := strings.Split(r.URL.Path, "/")[4]
 	fmt.Println("ArticleId is:", articleId)
 	Id, err := strconv.Atoi(articleId)

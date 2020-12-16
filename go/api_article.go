@@ -14,12 +14,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/boltdb/bolt"
 	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
-	"github.com/boltdb/bolt"
+	"time"
 )
 
 func DeleteArticleById(w http.ResponseWriter, r *http.Request) {
@@ -163,5 +164,65 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 
 
 func AddArticle(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("trying to add article")
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil{
+		log.Fatal(err)
+	}
+	defer db.Close()
 
+	articleCount := 0
+	db.View(func(tx *bolt.Tx) error{
+		b := tx.Bucket([]byte("Article"))
+		b.ForEach(func(k, v []byte) error{
+			articleCount = articleCount + 1
+			return nil
+		})
+		return nil
+	})
+
+	article := Article {
+		Id: int32(articleCount + 1),
+		Name: "",
+		Tags: []Tag{},
+		Date: time.Now().Format("2006-01-02 15:04:05"),
+		Content: "",
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&article)
+	if err != nil || (article.Content == "") || (article.Name == "") {
+		w.WriteHeader(http.StatusBadRequest)
+		if err != nil{
+			response := Response404{err.Error()}
+			JsonResponse(response, w, http.StatusBadRequest)
+		} else{
+			if article.Name == "" {
+				response := ErrorResponse{"There is no name"}
+				JsonResponse(response, w, http.StatusBadRequest)
+			} else {
+				response := ErrorResponse{"There is no content"}
+				JsonResponse(response, w, http.StatusBadRequest)
+			}
+		}
+		return
+	} else{
+		fmt.Println("article added:",article)
+	}
+
+	err = db.Update(func(tx *bolt.Tx) error{
+		b, err := tx.CreateBucketIfNotExists([]byte("Article"))
+		if err != nil{
+			return err
+		}
+		encoded, err := json.Marshal(article)
+		var str string
+		str = strconv.Itoa(int(article.Id))
+		return b.Put([]byte(str), encoded)
+	})
+	if err != nil{
+		response := Response404{err.Error()}
+		JsonResponse(response, w, http.StatusBadRequest)
+		return
+	}
+	JsonResponse(article, w, http.StatusOK)
 }

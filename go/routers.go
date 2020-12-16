@@ -97,4 +97,10 @@ var routes = Routes{
 		"/blog/user/signin",
 		SignIn,
 	},
+	Route{
+		Name: "AddArticle",
+		Method: strings.ToUpper("Post"),
+		Pattern: "/blog/user/addArticle",
+		HandlerFunc: AddArticle,
+	},
 }
