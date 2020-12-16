@@ -45,43 +45,39 @@ func CreateComments() {
 				id = int(article.Id)
 				filePath := "./data/" + strconv.Itoa(id) + "/comments"
 				files, err := ioutil.ReadDir(filePath)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				for i := 1; i <= len(files); i++ {
-					file, err := os.OpenFile(filePath+"/"+files[i-1].Name(), os.O_RDWR, 0666)
-					buf := bufio.NewReader(file)
-					user, err := buf.ReadString('\n')
-					user = strings.TrimSpace(user)
-					fmt.Println(user)
-
-					time, err := buf.ReadString('\n')
-					time = strings.TrimSpace(time)
-					fmt.Println(time)
-
-					var content string
-					for {
-						line, err := buf.ReadString('\n')
-						line = strings.TrimSpace(line)
-						content = content + line
-						if err != nil {
-							if err == io.EOF {
-								fmt.Println("File read ok!")
-								break
-							} else {
-								fmt.Println("Read file error!", err)
+				if err == nil {
+					for i := 1; i <= len(files); i++ {
+						file, errs := os.OpenFile(filePath+"/"+files[i-1].Name(), os.O_RDWR, 0666)
+						fmt.Println(errs)
+						buf := bufio.NewReader(file)
+						user, errs := buf.ReadString('\n')
+						user = strings.TrimSpace(user)
+						fmt.Println(user)
+						time, errs := buf.ReadString('\n')
+						time = strings.TrimSpace(time)
+						fmt.Println(time)
+						var content string
+						for {
+							line, errs := buf.ReadString('\n')
+							line = strings.TrimSpace(line)
+							content = content + line
+							if errs != nil {
+								if errs == io.EOF {
+									fmt.Println("File read ok!")
+									break
+								} else {
+									fmt.Println("Read file error!", errs)
+								}
 							}
 						}
-					}
-
-					//timeStr := time.Now().Format("2006-01-02 15:04:05")
-					comment = Comment{time, content, user, article.Id}
-					fmt.Println(comment)
-					vc, err := json.Marshal(comment)
-					err = b.Put([]byte(strconv.Itoa(int(article.Id))+"_"+strconv.Itoa(i)), []byte(vc))
-					if err != nil {
-						log.Fatal(err)
+						//timeStr := time.Now().Format("2006-01-02 15:04:05")
+						comment = Comment{time, content, user, article.Id}
+						fmt.Println(comment)
+						vc, errs := json.Marshal(comment)
+						errs = b.Put([]byte(strconv.Itoa(int(article.Id))+"_"+strconv.Itoa(i)), []byte(vc))
+						if errs != nil {
+							log.Fatal(errs)
+						}
 					}
 				}
 			}
