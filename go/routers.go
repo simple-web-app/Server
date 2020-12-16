@@ -11,7 +11,6 @@
 package swagger
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -45,7 +44,15 @@ func NewRouter() *mux.Router {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+	response := map[string]string{
+		"SignIn": "/blog/user/signin",
+		"AddArticle": "/blog/user/addArticle",
+		"GetArticleById": "/blog/user/article/{id}",
+		"DeleteArticleById" : "/blog/user/deleteArticle/{id}",
+		"CreateComment": "/blog/user/article/{id}/comments",
+		"GetCommentsOfArticle": "/blog/user/article/{id}/comments",
+	}
+	JsonResponse(response, w, http.StatusOK)
 }
 
 var routes = Routes{
