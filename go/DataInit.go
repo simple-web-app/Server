@@ -22,16 +22,20 @@ func CreateComments() {
 
 	//create
 	err = db.Update(func(tx *bolt.Tx) error {
+		//open the article database and comment database
 		a := tx.Bucket([]byte("Article"))
 		c := a.Cursor()
 		b := tx.Bucket([]byte("Comment"))
-
+		//if comment database isn't exists
 		if b == nil {
 			b, err = tx.CreateBucket([]byte("Comment"))
 			if err != nil {
 				log.Fatal(err)
 			}
+		} else{
+			return nil
 		}
+		//follow article to read comments
 		if b != nil {
 			var article Article
 			for k, v := c.First(); k != nil; k, v = c.Next() {
@@ -93,23 +97,24 @@ func CreateComments() {
 }
 
 func CreateUser() {
+	// open database
 	db, err := bolt.Open("my.db", 0600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-
+	// if not exists User bucket
 	err = db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("User"))
 		if b == nil {
-			//create table "xx" if not exits
 			b, err = tx.CreateBucket([]byte("User"))
 			if err != nil {
 				log.Fatal(err)
 			}
+		} else{
+			return nil
 		}
-
-		//insert rows
+	// add origin user1~user10
 		for i := 0; i < 10; i++ {
 			err := b.Put([]byte("user"+strconv.Itoa(i)), []byte("pass"+strconv.Itoa(i)))
 			if err != nil {
@@ -134,6 +139,7 @@ func CreateTable() {
 	defer db.Close()
 
 	err = db.Update(func(tx *bolt.Tx) error {
+		// open database
 		b := tx.Bucket([]byte("Article"))
 		if b == nil {
 			//create table "xx" if not exits
@@ -141,7 +147,10 @@ func CreateTable() {
 			if err != nil {
 				log.Fatal(err)
 			}
+		} else{
+			return nil
 		}
+		// create origin database and load local data
 		if b != nil {
 			var article Article
 			var tags []Tag
@@ -167,11 +176,9 @@ func CreateTable() {
 				}
 				content, err := ioutil.ReadFile(path + "/" + articleName)
 				if err != nil {
-					fmt.Println("获取失败", err)
+					fmt.Println("failed", err)
 					return err
 				}
-
-				//fmt.Println("文本内容为:", string(content))
 
 				title := articleName[:len(articleName)-3]
 				article = Article{int32(i), title, tags, "2020", string(content)}
