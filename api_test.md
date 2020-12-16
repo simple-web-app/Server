@@ -4,7 +4,8 @@
 
 ## Hint
 
-初始用户为user1~user10， 初始密码为pass1~pass10
+初始用户为user1~user10
+初始密码为pass1~pass10
 
 创建评论时需要token对应的用户名作为Arthur，否则无法创建
 
