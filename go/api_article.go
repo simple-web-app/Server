@@ -217,7 +217,7 @@ func AddArticle(w http.ResponseWriter, r *http.Request) {
 		}
 		encoded, err := json.Marshal(article)
 		fmt.Println(articleCount)
-		return b.Put(itob(articleCount), encoded)
+		return b.Put(itob(articleCount + 1), encoded)
 	})
 	if err != nil{
 		response := Response404{err.Error()}
