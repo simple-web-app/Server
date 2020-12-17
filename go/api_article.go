@@ -66,9 +66,9 @@ func GetArticleById(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
 	articleId := strings.Split(r.URL.Path, "/")[4]
 	Id, err := strconv.Atoi(articleId)
-	fmt.Println(Id)
 	if err != nil{
 		reponse := ErrorResponse{"Wrong ArticleId"}
 		JsonResponse(reponse, w, http.StatusBadRequest)
@@ -78,6 +78,7 @@ func GetArticleById(w http.ResponseWriter, r *http.Request) {
 	err = db.View(func(tx *bolt.Tx) error{
 		b := tx.Bucket([]byte("Article"))
 		if b != nil{
+			fmt.Println(Id)
 			v := b.Get(itob(Id))
 			if v == nil{
 				return errors.New("Article Not Exists")
@@ -215,9 +216,8 @@ func AddArticle(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 		encoded, err := json.Marshal(article)
-		var str string
-		str = strconv.Itoa(int(article.Id))
-		return b.Put([]byte(str), encoded)
+		fmt.Println(articleCount)
+		return b.Put(itob(articleCount), encoded)
 	})
 	if err != nil{
 		response := Response404{err.Error()}
