@@ -122,7 +122,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(pageCount)
 	IdIndex = (IdIndex - 1) * 10 + 1
 	var articles ArticlesResponse
-	var article ArticleResponse
+	var article Article
 	err = db.View(func(tx *bolt.Tx) error{
 		articles.PageCount = pageCount
 		b := tx.Bucket([]byte("Article"))

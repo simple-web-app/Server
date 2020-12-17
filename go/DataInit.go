@@ -12,6 +12,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 func CreateComments() {
 	db, err := bolt.Open("my.db", 0600, nil)
@@ -181,7 +182,8 @@ func CreateTable() {
 				}
 
 				title := articleName[:len(articleName)-3]
-				article = Article{int32(i), title, tags, "2020", string(content)}
+				var timeUnix int64 = int64(i) * 100 + 1608120901
+				article = Article{int32(i), title, tags, (time.Unix(timeUnix, 0)).Format("2006-01-02 15:04:05"), string(content)}
 				v, err := json.Marshal(article)
 				//insert rows
 				err = b.Put(itob(i), v)

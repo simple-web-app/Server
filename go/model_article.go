@@ -21,4 +21,6 @@ type Article struct {
 	Date string `json:"date,omitempty"`
 
 	Content string `json:"content"`
+
+	//CommentsNum int32 `json:"commentNum, omitempty"`
 }
