@@ -51,6 +51,21 @@ func CreateComments() {
 				filePath := "./data/" + strconv.Itoa(id) + "/comments"
 				files, err := ioutil.ReadDir(filePath)
 				if err == nil {
+						b1 := tx.Bucket([]byte("Article"))
+						if b1 != nil{
+							c := b1.Cursor()
+							c.Seek(itob(id))
+							errs := c.Delete()
+							article.CommentsNum = article.CommentsNum + int32(len(files))
+							encode, errs := json.Marshal(article)
+							fmt.Println(errs)
+							b1.Put(itob(id), encode)
+							if errs != nil{
+								return errors.New("Delete article failed")
+							}
+						} else{
+							return errors.New("Ariticle Not Exists")
+						}
 					for i := 1; i <= len(files); i++ {
 						file, errs := os.OpenFile(filePath+"/"+files[i-1].Name(), os.O_RDWR, 0666)
 						fmt.Println(errs)
@@ -183,7 +198,7 @@ func CreateTable() {
 
 				title := articleName[:len(articleName)-3]
 				var timeUnix int64 = int64(i) * 100 + 1608120901
-				article = Article{int32(i), title, tags, (time.Unix(timeUnix, 0)).Format("2006-01-02 15:04:05"), string(content)}
+				article = Article{int32(i), title, tags, (time.Unix(timeUnix, 0)).Format("2006-01-02 15:04:05"), string(content), 0}
 				v, err := json.Marshal(article)
 				//insert rows
 				err = b.Put(itob(i), v)

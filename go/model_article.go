@@ -22,5 +22,5 @@ type Article struct {
 
 	Content string `json:"content"`
 
-	//CommentsNum int32 `json:"commentNum, omitempty"`
+	CommentsNum int32 `json:"commentNum, omitempty"`
 }

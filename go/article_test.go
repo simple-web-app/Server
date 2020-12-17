@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"strconv"
 	"testing"
+	"time"
 
 	//my "github.com/simple-web-app/Server/go"
 	"log"
@@ -54,7 +55,7 @@ func getArticles(p int) {
 	//display 10 articles per page
 	IdIndex := (p-1)*10 + 1
 	var articles ArticlesResponse
-	var article ArticleResponse
+	var article Article
 	err = db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Article"))
 		if b != nil {
@@ -175,7 +176,7 @@ func createTable() {
 				//fmt.Println("文本内容为:", string(content))
 
 				title := articleName[:len(articleName)-3]
-				article = Article{int32(i), title, tags, "2020", string(content)}
+				article = Article{int32(i), title, tags, time.Now().Format("2006-01-02 15:04:05"), string(content), 0}
 				v, err := json.Marshal(article)
 				//insert rows
 				err = b.Put(itob(i), v)

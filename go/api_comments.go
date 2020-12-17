@@ -108,6 +108,25 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 				JsonResponse(response, w, http.StatusBadRequest)
 				return
 			}
+			err = db.Update(func(tx *bolt.Tx)error{
+				b := tx.Bucket([]byte("Article"))
+				if b != nil{
+					c := b.Cursor()
+					c.Seek(itob(Id))
+					err := c.Delete()
+					article.CommentsNum = article.CommentsNum + 1
+					encode, errs := json.Marshal(article)
+					fmt.Println(errs)
+					b.Put(itob(Id), encode)
+					if err != nil{
+						return errors.New("Delete article failed")
+					}
+				} else{
+					return errors.New("Ariticle Not Exists")
+				}
+				return nil
+			})
+
 			JsonResponse(comment, w, http.StatusOK)
 		} else{
 			response := ErrorResponse{"Token is not valid"}
