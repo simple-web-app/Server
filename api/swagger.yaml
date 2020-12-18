@@ -207,6 +207,93 @@ paths:
           description: "Bad Request"
           schema:
             $ref: "#/definitions/response_400"
+
+  /user/tag/{id}:
+    get:
+      tags:
+        - "tag"
+      summary: "The tag"
+      description: "Get tag"
+      operationId: "GetTagById"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "The ID of the tag"
+          required: true
+          type: "integer"
+          x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Tag"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/response_400"
+        "404":
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/response_404"
+
+  /user/getTags:
+    get:
+      tags:
+        - "tag"
+      summary: "The tag"
+      description: "Get tags"
+      operationId: "GetTags"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "Tag"
+          name: "Tag"
+          required: true
+          schema:
+            $ref: "#/definitions/Tag"
+          x-exportParaName: "Tag"
+          x-exportParamName: "Tag"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Tag"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/response_400"
+        "404":
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/response_404"
+
+  /user/addTag:
+    post:
+      tags:
+        - "tag"
+        summary: "Add a tag at last"
+        description: "Add a tag"
+        operationId: "AddTag"
+        parameters:
+          - in: "Tag"
+            name: "Tag"
+            required: true
+            schema:
+              $ref: "#/definitions/Tag"
+            x-exportParaName: "Tag"
+            x-exportParamName: "Tag"
+        responses:
+          "200":
+            description: "Successful"
+            schema:
+              $ref: "#/definitions/Tag"
+          "400":
+            description: "Bad Request"
+            schema:
+              $ref: "#/definitions/response_400"
+
 definitions:
   User:
     type: "object"
@@ -223,6 +310,8 @@ definitions:
       username: "username"
   Tag:
     type: "object"
+    required:
+      - "name"
     properties:
       name:
         type: "string"

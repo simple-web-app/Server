@@ -110,4 +110,22 @@ var routes = Routes{
 		Pattern: "/blog/user/addArticle",
 		HandlerFunc: AddArticle,
 	},
+	Route{
+		Name: "GetTags",
+		Method: strings.ToUpper("Get"),
+		Pattern: "/blog/user/getTags",
+		HandlerFunc: GetTags,
+	},
+	Route{
+		Name: "GetTagById",
+		Method: strings.ToUpper("Get"),
+		Pattern: "/blog/user/tag/{id}",
+		HandlerFunc: GetTagById,
+	},
+	Route{
+		Name: "AddTag",
+		Method: strings.ToUpper("Post"),
+		Pattern: "/blog/user/addTag",
+		HandlerFunc: AddTag,
+	},
 }

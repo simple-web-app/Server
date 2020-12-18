@@ -217,3 +217,50 @@ func CreateTable() {
 		log.Fatal(err)
 	}
 }
+
+
+func CreateTag() {
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	err = db.Update(func(tx *bolt.Tx) error {
+		// if not exists Tag bucket
+		b := tx.Bucket([]byte("Tag"))
+		if b == nil {
+			b, err = tx.CreateBucket([]byte("Tag"))
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else{
+			return nil
+		}
+		// add origin tag1 and tag2
+		var tag Tag
+		tag.Name = "tag1"
+		v, err := json.Marshal(tag)
+		err = b.Put([]byte(strconv.Itoa(1)), v)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(strconv.Itoa(1), "tag"+strconv.Itoa(1))
+		/*
+		tag.Name = "tag2"
+		v, err = json.Marshal(tag)
+		err = b.Put([]byte(strconv.Itoa(1)), v)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(strconv.Itoa(2), "tag"+strconv.Itoa(2))
+		*/
+
+		return nil
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+

@@ -10,6 +10,7 @@
 
 package swagger
 
-type Tag struct {
-	Name string `json:"name,omitempty"`
+type Tags struct {
+	Contents []Tag `json:"Contents,omitempty"`
 }
+

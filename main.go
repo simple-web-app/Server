@@ -29,6 +29,7 @@ func main() {
 	sw.CreateUser()
 	sw.CreateTable()
 	sw.CreateComments()
+	sw.CreateTag()
 	router := sw.NewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", router))
