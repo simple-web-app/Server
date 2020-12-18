@@ -117,6 +117,115 @@ http://localhost:8080/blog/user/deleteArticle/1
 "Success"
 ```
 
+
+
+#### 	Get Comments
+
+```
+http://localhost:8080/blog/user/article/{id}/comments
+```
+
+Get时需要提供page作为参数
+
+举例
+
+```
+http://localhost:8080/blog/user/article/2/comments?page=1
+```
+
+返回值
+
+（其中date为time，content和author为string， articleId为int32）
+
+```
+{
+  "PageCount": 2,
+  "contents": [
+    {
+      "date": "2020.12.14 20:12:05",
+      "content": "qqq",
+      "author": "quq",
+      "articleId": 2
+    },
+    {
+      "date": "2020.12.14 20:12:04",
+      "content": "qqqa",
+      "author": "qwe",
+      "articleId": 2
+    }
+  ]
+}
+```
+
+#### GetTagById
+
+```
+http://localhost:8080/blog/user/tag/{id}
+```
+
+使用时需要指定tag的ID来找到对应的tag
+
+举例：
+
+```
+http://localhost:8080/blog/user/tag/1
+```
+
+结果：
+
+![](./fig/getTagById.PNG)
+
+
+
+#### GetTags
+
+```
+http://localhost:8080/blog/user/getTags
+```
+
+使用时不需要任何参数，会直接输出所有tags
+
+
+结果：
+
+![](./fig/addTag.PNG)
+
+
+
+### POST
+
+#### 	Create Comment
+
+```
+http://localhost:8080/blog/user/article/{id}/comments
+```
+
+举例
+
+```
+http://localhost:8080/blog/user/article/1/comments
+```
+
+需要headers
+
+Authorization : token（token为登录时返回的token）
+
+需要Body
+
+{"content":"contents"} 属性为string
+
+返回值
+
+```
+{
+      "date": "2020-12-15 13:02:41",
+      "content": "new content3",
+      "author": "user1",
+      "articleId": 2
+    }
+```
+
+
 #### Add Article
 
 ```
@@ -161,74 +270,32 @@ http://localhost:8080/blog/user/addArticle
 显然，这时已经成功添加文件了。
 
 
-#### 	Get Comments
+
+#### AddTag
 
 ```
-http://localhost:8080/blog/user/article/{id}/comments
+http://localhost:8080/blog/user/addTag
 ```
 
-Get时需要提供page作为参数
-
-举例
+功能为添加Tag,使用时需要Body参数，如下
 
 ```
-http://localhost:8080/blog/user/article/2/comments?page=1
+{"name":"tag name"}
 ```
 
-返回值
-
-（其中date为time，content和author为string， articleId为int32）
+举例：
 
 ```
-{
-  "PageCount": 2,
-  "contents": [
-    {
-      "date": "2020.12.14 20:12:05",
-      "content": "qqq",
-      "author": "quq",
-      "articleId": 2
-    },
-    {
-      "date": "2020.12.14 20:12:04",
-      "content": "qqqa",
-      "author": "qwe",
-      "articleId": 2
-    }
-  ]
-}
+{"name":"tag2"}
 ```
 
-### POST
-
-#### 	Create Comment
+然后运行
 
 ```
-http://localhost:8080/blog/user/article/{id}/comments
+http://localhost:8080/blog/user/getTags
 ```
+可以看到如下结果：
 
-举例
+![](./fig/addTag.PNG)
 
-```
-http://localhost:8080/blog/user/article/1/comments
-```
-
-需要headers
-
-Authorization : token（token为登录时返回的token）
-
-需要Body
-
-{"content":"contents"} 属性为string
-
-返回值
-
-```
-{
-      "date": "2020-12-15 13:02:41",
-      "content": "new content3",
-      "author": "user1",
-      "articleId": 2
-    }
-```
-
+显然，此时已经成功添加了一个新的tag.
