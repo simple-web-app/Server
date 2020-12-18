@@ -241,11 +241,11 @@ func CreateTag() {
 		var tag Tag
 		tag.Name = "tag1"
 		v, err := json.Marshal(tag)
-		err = b.Put([]byte(strconv.Itoa(1)), v)
+		err = b.Put([]byte(itob(1)), v)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(strconv.Itoa(1), "tag"+strconv.Itoa(1))
+		fmt.Println(itob(1), "tag"+strconv.Itoa(1))
 		/*
 		tag.Name = "tag2"
 		v, err = json.Marshal(tag)

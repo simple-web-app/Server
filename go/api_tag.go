@@ -31,7 +31,9 @@ func GetTagById(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	tagId := strings.Split(r.URL.Path, "/")[4]
+	fmt.Println(tagId)
 	Id, err := strconv.Atoi(tagId)
+	fmt.Println(Id)
 	if err != nil{
 		response := ErrorResponse{"Wrong TagId"}
 		JsonResponse(response, w, http.StatusBadRequest)
