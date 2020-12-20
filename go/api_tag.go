@@ -30,7 +30,7 @@ func GetTagById(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	tagId := strings.Split(r.URL.Path, "/")[4]
+	tagId := strings.Split(r.URL.Path, "/")[3]
 	fmt.Println(tagId)
 	Id, err := strconv.Atoi(tagId)
 	fmt.Println(Id)

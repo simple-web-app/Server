@@ -39,7 +39,7 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	articleId := strings.Split(r.URL.Path, "/")[4]
+	articleId := strings.Split(r.URL.Path, "/")[3]
 	temp, err := strconv.Atoi(articleId)
 	var Id int = int(temp)
 	if err != nil{

@@ -30,7 +30,7 @@ func DeleteArticleById(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	articleId := strings.Split(r.URL.Path, "/")[4]
+	articleId := strings.Split(r.URL.Path, "/")[3]
 	Id, err := strconv.Atoi(articleId)
 	fmt.Println(Id)
 	if err != nil{
@@ -67,7 +67,7 @@ func GetArticleById(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	articleId := strings.Split(r.URL.Path, "/")[4]
+	articleId := strings.Split(r.URL.Path, "/")[3]
 	Id, err := strconv.Atoi(articleId)
 	if err != nil{
 		reponse := ErrorResponse{"Wrong ArticleId"}
@@ -109,7 +109,12 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
-	page := m["page"][0]
+	var page string
+	if m["page"] !=nil{
+		page = m["page"][0]
+	} else{
+		page = "1"
+	}
 	IdIndex, err := strconv.Atoi(page)
 	pageCount := 0
 	db.View(func(tx *bolt.Tx) error{

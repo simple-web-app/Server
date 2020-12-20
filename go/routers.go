@@ -45,12 +45,15 @@ func NewRouter() *mux.Router {
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	response := map[string]string{
-		"SignIn": "/blog/user/signin",
-		"AddArticle": "/blog/user/addArticle",
-		"GetArticleById": "/blog/user/article/{id}",
-		"DeleteArticleById" : "/blog/user/deleteArticle/{id}",
-		"CreateComment": "/blog/user/article/{id}/comments",
-		"GetCommentsOfArticle": "/blog/user/article/{id}/comments",
+		"SignIn": "/api/user/signin",
+		"AddArticle": "/api/article",
+		"GetArticleById": "/api/article/{id}",
+		"DeleteArticleById" : "/api/article/{id}",
+		"CreateComment": "/api/article/{id}/comments",
+		"GetCommentsOfArticle": "/api/article/{id}/comments",
+		"GetTags": "/api/tag",
+		"GetTagById": "/api/tag/{id}",
+		"AddTag": "/api/tag",
 	}
 	JsonResponse(response, w, http.StatusOK)
 }
@@ -59,73 +62,73 @@ var routes = Routes{
 	Route{
 		"Index",
 		"GET",
-		"/blog/",
+		"/api/",
 		Index,
 	},
 
 	Route{
 		"DeleteArticleById",
-		strings.ToUpper("Get"),
-		"/blog/user/deleteArticle/{id}",
+		strings.ToUpper("Delete"),
+		"/api/article/{id}",
 		DeleteArticleById,
 	},
 
 	Route{
 		"GetArticleById",
 		strings.ToUpper("Get"),
-		"/blog/user/article/{id}",
+		"/api/article/{id}",
 		GetArticleById,
 	},
 
 	Route{
 		"GetArticles",
 		strings.ToUpper("Get"),
-		"/blog/user/articles",
+		"/api/article",
 		GetArticles,
 	},
 
 	Route{
 		"GetCommentsOfArticle",
 		strings.ToUpper("Get"),
-		"/blog/user/article/{id}/comments",
+		"/api/article/{id}/comments",
 		GetCommentsOfArticle,
 	},
 
 	Route{
 		"CreateComment",
 		strings.ToUpper("Post"),
-		"/blog/user/article/{id}/comments",
+		"/api/article/{id}/comments",
 		CreateComment,
 	},
 
 	Route{
 		"SignIn",
 		strings.ToUpper("Get"),
-		"/blog/user/signin",
+		"/api/user/signin",
 		SignIn,
 	},
 	Route{
 		Name: "AddArticle",
 		Method: strings.ToUpper("Post"),
-		Pattern: "/blog/user/addArticle",
+		Pattern: "/api/article",
 		HandlerFunc: AddArticle,
 	},
 	Route{
 		Name: "GetTags",
 		Method: strings.ToUpper("Get"),
-		Pattern: "/blog/user/getTags",
+		Pattern: "/api/tag",
 		HandlerFunc: GetTags,
 	},
 	Route{
 		Name: "GetTagById",
 		Method: strings.ToUpper("Get"),
-		Pattern: "/blog/user/tag/{id}",
+		Pattern: "/api/tag/{id}",
 		HandlerFunc: GetTagById,
 	},
 	Route{
 		Name: "AddTag",
 		Method: strings.ToUpper("Post"),
-		Pattern: "/blog/user/addTag",
+		Pattern: "/api/tag",
 		HandlerFunc: AddTag,
 	},
 }
