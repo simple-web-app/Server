@@ -113,7 +113,12 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	if m["page"] !=nil{
 		page = m["page"][0]
 	} else{
-		page = "1"
+		http.Redirect(
+			w,
+			r,
+			"/api/article?page=1",
+			302,
+		)
 	}
 	IdIndex, err := strconv.Atoi(page)
 	pageCount := 0
