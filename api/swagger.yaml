@@ -45,7 +45,7 @@ paths:
           description: "Not Found"
           schema:
             $ref: "#/definitions/response_404"
-  /user/articles:
+  /articles:
     get:
       tags:
       - "article"
@@ -70,7 +70,7 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/response_404"
-  /user/article/{id}:
+  /article/{id}:
     get:
       tags:
       - "article"
@@ -99,8 +99,28 @@ paths:
           description: "Not Found"
           schema:
             $ref: "#/definitions/response_404"
-
-  /user/addArticle:
+    delete:
+      tags:
+        - "article"
+      summary: "Delete article by id"
+      description: "Delete an article"
+      operationId: "DeleteArticleById"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "The ID of the article"
+          required: true
+          type: "integer"
+          x-exportParaName: "Id"
+          x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "Success"
+        "404":
+          description: "Not Found"
+  /article:
     post:
       tags:
         - "article"
@@ -108,7 +128,7 @@ paths:
       description: "Add a article"
       operationId: "AddArticle"
       parameters:
-        - in: "Article"
+        - in: "body"
           name: "Article"
           required: true
           schema:
@@ -124,30 +144,7 @@ paths:
           description: "Bad Request"
           schema:
             $ref: "#/definitions/response_400"
-
-  /user/deleteArticle/{id}:
-    get:
-      tags:
-      - "article"
-      summary: "Delete article by id"
-      description: "Delete an article"
-      operationId: "DeleteArticleById"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "The ID of the article"
-        required: true
-        type: "integer"
-        x-exportParaName: "Id"
-        x-exportParamName: "Id"
-      responses:
-        "200":
-          description: "Success"
-        "404":
-          description: "Not Found"
-  /user/article/{id}/comments:
+  /article/{id}/comments:
     get:
       tags:
       - "comment"
@@ -208,7 +205,7 @@ paths:
           schema:
             $ref: "#/definitions/response_400"
 
-  /user/tag/{id}:
+  /tag/{id}:
     get:
       tags:
         - "tag"
@@ -238,7 +235,7 @@ paths:
           schema:
             $ref: "#/definitions/response_404"
 
-  /user/getTags:
+  /tag:
     get:
       tags:
         - "tag"
@@ -248,7 +245,7 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - in: "Tag"
+        - in: "body"
           name: "Tag"
           required: true
           schema:
@@ -268,32 +265,29 @@ paths:
           description: "Not Found"
           schema:
             $ref: "#/definitions/response_404"
-
-  /user/addTag:
     post:
       tags:
         - "tag"
-        summary: "Add a tag at last"
-        description: "Add a tag"
-        operationId: "AddTag"
-        parameters:
-          - in: "Tag"
-            name: "Tag"
-            required: true
-            schema:
-              $ref: "#/definitions/Tag"
-            x-exportParaName: "Tag"
-            x-exportParamName: "Tag"
-        responses:
-          "200":
-            description: "Successful"
-            schema:
-              $ref: "#/definitions/Tag"
-          "400":
-            description: "Bad Request"
-            schema:
-              $ref: "#/definitions/response_400"
-
+      summary: "Add a tag at last"
+      description: "Add a tag"
+      operationId: "AddTag"
+      parameters:
+        - in: "body"
+          name: "Tag"
+          required: true
+          schema:
+            $ref: "#/definitions/Tag"
+          x-exportParaName: "Tag"
+          x-exportParamName: "Tag"
+      responses:
+        "200":
+           description: "Successful"
+           schema:
+             $ref: "#/definitions/Tag"
+        "400":
+           description: "Bad Request"
+           schema:
+             $ref: "#/definitions/response_400"
 definitions:
   User:
     type: "object"
