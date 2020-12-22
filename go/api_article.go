@@ -140,10 +140,10 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		var k, v []byte
 		if b != nil{
 			c := b.Cursor()
-			k, v = c.First()
+			k,v = c.Last()
 			err = json.Unmarshal(v, &article)
 			for i := 1; i < IdIndex; i++{
-				k, v = c.Next()
+				k, v = c.Prev()
 				err = json.Unmarshal(v, &article)
 				fmt.Println(article.Id)
 				if k == nil{
@@ -151,7 +151,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			count := 0
-			for ; k != nil && count < 10; k, v = c.Next(){
+			for ; k != nil && count < 10; k, v = c.Prev(){
 				err = json.Unmarshal(v, &article)
 				if err != nil{
 					return err
