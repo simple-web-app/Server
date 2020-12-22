@@ -52,7 +52,10 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
-	page := m["page"][0]
+	var page string
+	if m["page"]==nil{
+		page = "1"
+	}
 	index, err := strconv.Atoi(page)
 	fmt.Println(index)
 	var article []byte

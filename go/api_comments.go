@@ -97,10 +97,14 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 				if err != nil{
 					return err
 				}
-				id, _ := b.NextSequence()
+				commentCount := 0
+				b.ForEach(func(k, v []byte) error{
+					commentCount = commentCount + 1
+					return nil
+				})
 				encoded, err := json.Marshal(comment)
 				var str string
-				str = strconv.Itoa(Id) + "_" + strconv.Itoa(int(id))
+				str = strconv.Itoa(Id) + "_" + strconv.Itoa(int(commentCount + 1))
 				return b.Put([]byte(str), encoded)
 			})
 			if err != nil{
@@ -119,7 +123,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 					fmt.Println(errs)
 					b.Put(itob(Id), encode)
 					if err != nil{
-						return errors.New("Delete article failed")
+						return errors.New("Change Comments failed")
 					}
 				} else{
 					return errors.New("Ariticle Not Exists")
