@@ -14,12 +14,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/url"
-	"sort"
-	"strconv"
 	"github.com/boltdb/bolt"
 	"log"
 	"net/http"
+	"net/url"
+	"sort"
+	"strconv"
 	"strings"
 )
 type UserSlice []Comment
@@ -101,21 +101,21 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 		JsonResponse(response, w, http.StatusNotFound)
 		return
 	}
-	contentsCount := len(comments.Contents)
-	comments.PageCount = contentsCount
+	//contentsCount := len(comments.Contents)
+	//comments.PageCount = contentsCount
 	sort.Sort(UserSlice(comments.Contents))
-	if contentsCount <= (index - 1) * 5{
-		err := errors.New("Page is out of index")
-		response := ErrorResponse{err.Error()}
-		JsonResponse(response, w, http.StatusNotFound)
-		return
-	}
-	var end int
-	if index * 5 < contentsCount{
-		end = index * 5
-	}else {
-		end = contentsCount
-	}
-	comments.Contents = comments.Contents[(index - 1) * 5 : end]
+	//if contentsCount <= (index - 1) * 5{
+	//	err := errors.New("Page is out of index")
+	//	response := ErrorResponse{err.Error()}
+	//	JsonResponse(response, w, http.StatusNotFound)
+	//	return
+	//}
+	//var end int
+	//if index * 5 < contentsCount{
+	//	end = index * 5
+	//}else {
+	//	end = contentsCount
+	//}
+	//comments.Contents = comments.Contents[(index - 1) * 5 : end]
 	JsonResponse(comments, w, http.StatusOK)
 }
